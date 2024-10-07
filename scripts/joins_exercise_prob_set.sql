@@ -147,13 +147,16 @@ ORDER BY
 
 --INITIAL ATTEMPT:
 SELECT
-	s.length_in_min
-	AVG(r.imdb_rating) AS avg_imdb
+	CASE 
+		WHEN s.length_in_min > 120 THEN 'Over 2 hrs'
+		ELSE 'Under 2 hrs' 
+		END AS filtered_length
+,	ROUND(AVG(r.imdb_rating),2) AS avg_imdb
 FROM specs AS s
 	INNER JOIN rating AS r
 		ON s.movie_id = r.movie_id
-WHERE 
-	s.length_in_min >120 OR s.length_in_min <120
-GROUP BY s.length_in_min
+GROUP BY 
+	filtered_length
 ORDER BY avg_imdb DESC;
---INITIAL ANS:
+--INITIAL ANS: (Over 2 hrs = 7.26) > (Under 2 hrs = 6.92)
+
