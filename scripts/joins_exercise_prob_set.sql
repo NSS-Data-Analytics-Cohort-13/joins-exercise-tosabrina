@@ -88,19 +88,72 @@ ORDER BY
 -- 5. Write a query that returns the five distributors with the highest average movie budget.
 
 /*NOTES:
-- Tables: distributors, revenue
+- Tables: distributors, revenue, specs
 */
 
---INTIAL ATTEMPT:
-
---INITIAL ANS:
+--INITIAL ATTEMPT:
+SELECT
+	d.company_name
+,	ROUND(AVG(r.film_budget), 2) AS avg_budget
+FROM specs AS s
+	INNER JOIN distributors as d
+		ON s.domestic_distributor_id = d.distributor_id
+	INNER JOIN revenue as r
+		ON s.movie_id = r.movie_id
+GROUP BY d.company_name
+ORDER BY avg_budget DESC
+LIMIT 5;
+/*INITIAL ANS:
+"Walt Disney " = 148735526.32
+"Sony Pictures"	= 139129032.26
+"Lionsgate"	= 122600000.00
+"DreamWorks" = 121352941.18
+"Warner Bros." = 103430985.92
+*/
 
 -- 6. How many movies in the dataset are distributed by a company which is not headquartered in California? Which of these movies has the highest imdb rating?
 
---INTIAL ATTEMPT:
---INITIAL ANS:
+/*NOTES:
+- Tables: distributors, specs, rating
+- COUNT(film_title)
+- Filter headquarters NOT IN 'CA'
+*/
+
+--PT 1 INITIAL ATTEMPT:
+SELECT
+	s.film_title
+,	MAX(r.imdb_rating) AS max_imdb
+FROM specs AS s
+	INNER JOIN distributors AS d
+		ON s.domestic_distributor_id = d.distributor_id
+	INNER JOIN rating AS r
+		ON s.movie_id = r.movie_id
+WHERE 
+	d.headquarters <> 'CA'
+GROUP BY 
+	s.film_title
+ORDER BY
+	max_imdb DESC;
+--INITIAL ANS: 416. The Dark Knight
 
 -- 7. Which have a higher average rating, movies which are over two hours long or movies which are under two hours?
 
---INTIAL ATTEMPT:
+/*NOTES:
+- Tables: rating, specs
+- AVG imdb 
+- Filter length_in_min >120 min OR <120
+- Could potentially use CASE? Under SELECT, WHERE, or FROM?
+*/
+
+--INITIAL ATTEMPT:
+SELECT
+	s.length_in_min
+	AVG(r.imdb_rating) AS avg_imdb
+FROM specs AS s
+	INNER JOIN rating AS r
+		ON s.movie_id = r.movie_id
+WHERE 
+	s.length_in_min >120 OR s.length_in_min <120
+GROUP BY s.length_in_min
+ORDER BY avg_imdb DESC;
 --INITIAL ANS:
