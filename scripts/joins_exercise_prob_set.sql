@@ -129,12 +129,12 @@ FROM specs AS s
 	INNER JOIN rating AS r
 		ON s.movie_id = r.movie_id
 WHERE 
-	d.headquarters <> 'CA'
+	d.headquarters NOT ILIKE '%CA'
 GROUP BY 
 	s.film_title
 ORDER BY
 	max_imdb DESC;
---INITIAL ANS: 416. The Dark Knight
+--INITIAL ANS: 2, Dirty Dancing (7.0)
 
 -- 7. Which have a higher average rating, movies which are over two hours long or movies which are under two hours?
 
